@@ -1,0 +1,26 @@
+# Simbolos de kernel que agregamos al port del airoha/en7523 (kernel 6.18).
+# Van en los config fragments del target de OpenWrt (ver openwrt/README.md).
+
+# -- Switch DSA (si no, los 4 puertos LAN no aparecen) --
+# en target/linux/airoha/en7523/config-6.18 :  OJO: NET_DSA estaba APAGADO.
+CONFIG_NET_DSA=y
+CONFIG_NET_DSA_MT7530=y
+CONFIG_NET_DSA_MT7530_MMIO=y
+# (olddefconfig trae solo NET_DSA_TAG_MTK y NET_DSA_MT7530_MDIO)
+
+# -- Cmdline forzado: el zloader inyecta root=/dev/mtdblock6 y pisa el rootfs.
+#    CMDLINE_FORCE lo borra; mtdsplit auto-monta la particion "rootfs".
+#    en target/linux/airoha/config-6.18 :
+CONFIG_CMDLINE="console=ttyS0,115200n8 earlycon rootfstype=squashfs ro"
+CONFIG_CMDLINE_FORCE=y
+# CONFIG_CMDLINE_FROM_BOOTLOADER is not set
+# CONFIG_CMDLINE_EXTEND is not set
+# (si no desactivas FROM_BOOTLOADER/EXTEND, el 'choice' de Kconfig vuelve a
+#  FROM_BOOTLOADER en cada regeneracion del .config)
+
+# -- WiFi en kernel 6.18: ieee80211_ptr de struct net_device paso a gatearse
+#    por CONFIG_CFG80211_HEADERS. Ya es upstream y esta en el config generico
+#    de OpenWrt (target/linux/generic/config-6.18). Verifica que este en 'y':
+CONFIG_CFG80211_HEADERS=y
+# Si el vmlinux se compilo SIN este simbolo pero el modulo cfg80211 CON el,
+# struct net_device queda descuadrado 12 bytes -> crash. Ver docs/05-wifi-cfg80211.md

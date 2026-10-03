@@ -1,0 +1,18 @@
+# binarios de fabrica / derivados (NO publicar)
+*.bin
+*.itb
+*.img
+*.ko
+recv_m4full*
+preloader*
+root.squashfs
+fit_dtb*.bin
+kernel_lzma*
+# build / logs / temporales
+build_dir/
+logs/
+*.log
+*.o
+*.elf
+__pycache__/
+.render/
